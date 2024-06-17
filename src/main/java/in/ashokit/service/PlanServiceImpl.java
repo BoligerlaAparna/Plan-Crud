@@ -71,8 +71,26 @@ public class PlanServiceImpl implements PlanService {
 
 	@Override
 	public boolean updatePlan(Plan plan) {
-		     planRepo.save(plan); //(upsert)
-		      
+		
+		Integer planId=plan.getPlanId();
+		
+		Optional<Plan> findById = planRepo.findById(planId);
+		if(findById.isPresent()) {
+			Plan p=new Plan();
+			p.setActiveSw(plan.getActiveSw());
+			p.setPlanEndDate(plan.getPlanEndDate());
+			p.setPlanStartDate(plan.getPlanStartDate());
+			p.setUpdateBy(plan.getUpdateBy());
+			p.setUpdateDate(plan.getUpdateDate());
+			p.setPlanName(plan.getPlanName());
+			p.setCreateBy(plan.getCreateBy());
+			p.setPlanId(planId);
+			
+		     planRepo.save(p);
+		     return plan.getPlanId()!=null;//(upsert)
+		}
+		else
+			planRepo.save(plan); 
 		      return plan.getPlanId()!=null;
 		    	  
 	}
